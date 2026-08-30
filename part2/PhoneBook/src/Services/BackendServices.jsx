@@ -22,4 +22,11 @@ const deleteFromDb = (objectId) => {
     return request.then(response => (response.data))
 }
 
-export default {getAll, addToDb, deleteFromDb}
+
+const updateDb = (object, objectId) => {
+    const request = axios.put(`${baseUrl}/${objectId}`,object)
+    return request.then(response => response.data)
+}
+
+
+export default {getAll, addToDb, deleteFromDb, updateDb}

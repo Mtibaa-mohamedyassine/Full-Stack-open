@@ -36,9 +36,9 @@ const App = () => {
     
     const np = {name: newName, number:newPhone}
 
-    const Exist = persons.some(person => newName === person.name)
+    const existPerson = persons.find(person => newName === person.name)
 
-    if(!Exist)
+    if(!existPerson)
     {
       BackendServices
         .addToDb(np)
@@ -49,6 +49,19 @@ const App = () => {
           console.log('pushed to the server succesfully!')
           console.log(returnedPerson)
         })
+    }
+    else if(existPerson && np.number != existPerson.number)
+    {
+      if(window.confirm(`${np.name} exist, do you want to replace the old number by ${np.number}`))
+      {
+        BackendServices
+          .updateDb(np, existPerson.id)
+          .then((resonse => {
+            console.log(`${np.name} updated successfully!`)
+            const newPersonsList = persons.map(person => person.name === np.name ? {...person, number: np.number}: person)
+            setPersons(newPersonsList)
+          }))
+      }
     }
     else
       alert(`${newName} is already added to PhoneBook`)

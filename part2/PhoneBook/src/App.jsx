@@ -39,6 +39,9 @@ const App = () => {
           console.log(`failed to delete from the server the person with this id: ${objectId}`)
           setNotificationStatus('error')
           setNotification(`failed to delete from the server the person with this id: ${objectId}`)
+          setTimeout(() => {
+            setNotification(null)
+          },5000)
         })
   }
     

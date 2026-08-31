@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import Persons from './components/Persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
+import Notification from "./components/Notification"
 import BackendServices from './Services/BackendServices'
 
 
@@ -11,6 +12,9 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhone] = useState('')
   const [newQuery, setNewQuery] = useState('')
+  const [newNotification, setNotification] = useState(null)
+  const [notificationStatus, setNotificationStatus] = useState('')
+
 
   const handleNewChange = (event) => setNewName(event.target.value)
   const handleChangePhone = (event) => setNewPhone(event.target.value)
@@ -25,9 +29,17 @@ const App = () => {
         .deleteFromDb(objectId)
         .then(person => {
           setPersons(persons.filter(p => p.id != objectId))
-          console.log(`person with this id: ${objectId} deleted form the server`)
+          setNotificationStatus('info')
+          setNotification(`person with this id: ${objectId} deleted form the server`)
+          setTimeout(() => {
+            setNotification(null)
+          },5000)
         })
-        .catch(error => console.log(`failed to delete from the server the person with this id: ${objectId}`))
+        .catch(error => {
+          console.log(`failed to delete from the server the person with this id: ${objectId}`)
+          setNotificationStatus('error')
+          setNotification(`failed to delete from the server the person with this id: ${objectId}`)
+        })
   }
     
 
@@ -48,6 +60,11 @@ const App = () => {
           setNewPhone('')
           console.log('pushed to the server succesfully!')
           console.log(returnedPerson)
+          setNotificationStatus('info')
+          setNotification(`Added ${np.name}`)
+          setTimeout(() => {
+                    setNotification(null)
+          }, 5000)
         })
     }
     else if(existPerson && np.number != existPerson.number)
@@ -60,11 +77,31 @@ const App = () => {
             console.log(`${np.name} updated successfully!`)
             const newPersonsList = persons.map(person => person.name === np.name ? {...person, number: np.number}: person)
             setPersons(newPersonsList)
+            setNotificationStatus('info')
+            setNotification(`${np.name} is updated`)
+            setTimeout(() => {
+              setNotification(null)
+            }, 5000)
           }))
+          .catch(() => {
+            setNotificationStatus('error')
+            setNotification(`Information of ${np.name} has already been romoved from server`)
+            setTimeout(() => {
+              setNotification(null)
+            },5000)
+          })
       }
     }
     else
-      alert(`${newName} is already added to PhoneBook`)
+    {
+      setNotificationStatus('info')
+      setNotification(`${newName} is already added to PhoneBook`)
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    }
+    
+
   }
 
   useEffect(() => {
@@ -87,6 +124,8 @@ const App = () => {
       <h1>PhoneBook</h1>
      
       <Filter handleChangeQuery={handleChangeQuery} />
+
+      <Notification message={newNotification} status={notificationStatus} />
 
       <h1>Add a new</h1>
       

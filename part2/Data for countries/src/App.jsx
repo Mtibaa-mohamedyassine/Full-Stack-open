@@ -17,7 +17,7 @@ const App = () => {
           console.log(response)
           setData(response)  
         })
-        .catch(error => console.log(error))    # error handling method ( .catch)
+        .catch(error => console.log(error))  
     } 
   ,[country])
  

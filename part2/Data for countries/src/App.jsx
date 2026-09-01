@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import services from './services/services.jsx'
 
-const App = () => {
+const App = () => {            
 
   const [country, setCountry] = useState('')
   const [data, setData] = useState([])
@@ -17,7 +17,7 @@ const App = () => {
           console.log(response)
           setData(response)  
         })
-        .catch(error => console.log(error))
+        .catch(error => console.log(error))    # error handling method ( .catch)
     } 
   ,[country])
  

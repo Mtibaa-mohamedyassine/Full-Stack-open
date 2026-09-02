@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import services from './services/services.jsx'
 
-const App = () => {            
+const App = () => {
 
   const [country, setCountry] = useState('')
   const [data, setData] = useState([])
+  const [weather, setWeather] = useState(null)
 
   const handleChange = (event) => {
     setCountry(event.target.value)
@@ -14,10 +15,10 @@ const App = () => {
        services
         .getData(country)
         .then(response => {
-          console.log(response)
+          //console.log(response)
           setData(response)  
         })
-        .catch(error => console.log(error))  
+        .catch(error => console.log(error))
     } 
   ,[country])
  
@@ -26,7 +27,29 @@ const App = () => {
       c.name.common.toLowerCase().includes(country.toLowerCase())
     ))
 
+  const handleShowCountry = (name) => {
+    setCountry(name)
+  }
+
+  useEffect(() => {
+    if(countriesToShow.length === 1)
+    {
+      const capital = countriesToShow[0]?.capital?.[0]
+
+      if(capital)
+      {
+        services
+        .getWeatherData(capital)
+        .then(response => {
+          console.log('weather Data received')
+          console.log(response)
+          setWeather(response)
+      })}
+      else
+        setWeather(null)
+    }},[countriesToShow])
   
+
   return (
   <div>
     find countries <input onChange={handleChange} value={country}/>
@@ -36,11 +59,15 @@ const App = () => {
 
       {countriesToShow.length >1 && countriesToShow.length <= 10 && (
         <div>
-          {countriesToShow.map(c => (<div key={c.cca3 || c.name.common}>
-                                      {c.name.common}
-                                    </div>))}
+          {countriesToShow.map(c => (
+            <div key={c.cca3 || c.name.common}>
+              <span>{c.name.common} </span>
+              <button onClick={() => handleShowCountry(c.name.common)}>Show</button>
+            </div>
+          ))}
         </div> 
       )}
+        
 
       {countriesToShow.length === 1 && (
         <div>
@@ -65,7 +92,23 @@ const App = () => {
               alt={`Flag of ${countriesToShow[0].name.common}`}
               width="150"
             />
+
             
+            {weather && (
+              <div>
+                <h4>weather in {countriesToShow[0].capital} </h4>
+                <p>Temperature {weather?.main.temp} Celsius</p>
+                {weather.weather?.[0] && (
+                  <img 
+                    src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} 
+                    alt={weather.weather[0].description}
+                    width="50"
+                  />
+                )}
+                <p>Wind {weather.wind?.speed }
+                  {console.log(weather)} m/s</p>
+              </div>
+            )}
         </div>
       )}
     </div>

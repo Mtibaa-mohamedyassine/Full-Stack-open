@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 
-const PhoneBook =
+let PhoneBook =
 [
     { 
       "id": "1",
@@ -46,6 +46,20 @@ app.get('/info', (request, response) => {
   const d = new Date()
   const l = PhoneBook.length
   response.send(`<p>Phonebook has info for ${l} people.</P> <P>${d}</P>`)
+})
+
+app.delete('/api/persons/:id', (request, response) => {
+  const id = request.params.id
+  const person = PhoneBook.find((n) => n.id == id)
+  
+  if(person){
+    PhoneBook = PhoneBook.filter((n) => n.id != id )
+    response.json(PhoneBook)
+  }
+  else{
+    response.status(404).end()
+  }
+
 })
 
 

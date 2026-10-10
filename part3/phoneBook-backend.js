@@ -29,6 +29,19 @@ app.get('/api/persons', (request, response) => {
   response.json(PhoneBook)
 })
 
+app.get('/api/persons/:id', (request, response) => {
+  const id = request.params.id
+  const person = PhoneBook.find((n) => n.id == id)
+  
+  if(person){
+    response.json(person)
+  }
+  else{
+    response.status(404).end()
+  }
+  
+})
+
 app.get('/info', (request, response) => {
   const d = new Date()
   const l = PhoneBook.length

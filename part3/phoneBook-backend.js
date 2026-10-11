@@ -65,16 +65,31 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 
 app.post('/api/persons', (request, response) => {
-  const id = Math.floor(Math.random()*10000).toString()
+  const name = request.body.name
+  const number = request.body.number
+
+  if (!name) {
+    return response.status(400).json({ error: 'name is missing' })
+  }
+
+  if (!number) {
+    return response.status(400).json({ error: 'number is missing' })
+  }
+
+  const exist = PhoneBook.find((n) => n.name === name)
+  if (exist) {
+    return response.status(400).json({ error: 'name must be unique' })
+  }
+
+  const id = Math.floor(Math.random() * 10000).toString()
   const person = {
-    id : id,
-    name: request.body.name,
-    phone: request.body.number
+    id: id,
+    name: name,
+    number: number
   }
 
   PhoneBook.push(person)
   response.json(PhoneBook)
-
 })
 
 const PORT = 3001

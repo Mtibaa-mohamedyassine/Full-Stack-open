@@ -1,0 +1,23 @@
+### Get all persons
+GET http://localhost:3001/api/persons
+
+### Get info page
+GET http://localhost:3001/info
+
+### Get person by ID (Valid)
+GET http://localhost:3001/api/persons/4
+
+### Get person by ID (Not found - should give 404)
+GET http://localhost:3001/api/persons/99
+
+### Delete a person
+DELETE http://localhost:3001/api/persons/3
+
+### Create a new person
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "name": "Sarah Conn",
+  "number": "555-1234"
+}

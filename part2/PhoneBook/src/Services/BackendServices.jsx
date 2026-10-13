@@ -2,7 +2,7 @@ import axios from 'axios'
 
 
 
-const baseUrl = 'http://localhost:3001/api/persons'
+const baseUrl = 'https://full-stack-open-part3-ea2o.onrender.com/api/persons'
 
 const getAll = () => {
 

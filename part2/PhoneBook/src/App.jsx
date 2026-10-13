@@ -58,7 +58,7 @@ const App = () => {
       BackendServices
         .addToDb(np)
         .then(returnedPerson => {
-          setPersons(persons.concat(returnedPerson))
+          setPersons(prevpersons => prevpersons.concat(returnedPerson))
           setNewName('')
           setNewPhone('')
           console.log('pushed to the server succesfully!')

@@ -51,6 +51,10 @@ const App = () => {
     
     const np = {name: newName, number:newPhone}
 
+    console.log("ADD PERSON CALLED")
+
+    console.log(np)
+
     const existPerson = persons.find(person => newName === person.name)
 
     if(!existPerson)
@@ -59,6 +63,9 @@ const App = () => {
         .addToDb(np)
         .then(returnedPerson => {
           setPersons(prevpersons => prevpersons.concat(returnedPerson))
+          console.log(persons)
+          
+          
           setNewName('')
           setNewPhone('')
           console.log('pushed to the server succesfully!')
